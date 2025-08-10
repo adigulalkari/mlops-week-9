@@ -62,6 +62,13 @@ plt.tight_layout()
 plt.savefig("artifacts/shap_plot.png", dpi=150, bbox_inches="tight")
 plt.close()
 
+plt.figure(figsize=(10, 6))
+shap.summary_plot(shap_values[2], X_test.iloc[:15].values, feature_names=feature_cols, show=False)
+plt.title('SHAP Summary for Virginica Prediction')
+plt.tight_layout()
+plt.savefig("artifacts/shap_virginica_summary.png", dpi=150, bbox_inches="tight")
+plt.close()
+
 # Drift detection
 new_data = df.copy()
 np.random.seed(123)
