@@ -9,7 +9,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 from fairlearn.metrics import MetricFrame, selection_rate
-from evidently.report import Report
+from evidently import Report
 from evidently.metric_preset import ClassificationPreset
 from evidently.metrics import ClassificationClassBalance, ClassificationQualityByClass
 
