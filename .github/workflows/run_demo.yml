@@ -27,7 +27,7 @@ jobs:
 
     - name: Run ML pipeline
       run: |
-        python your_script_name.py
+        python train.py
 
     - name: Upload ML artifacts
       uses: actions/upload-artifact@v4
