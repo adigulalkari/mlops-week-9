@@ -1,0 +1,30 @@
+{
+  "dataset_info": {
+    "samples": 150,
+    "features": 4,
+    "classes": 3,
+    "class_names": [
+      "setosa",
+      "versicolor",
+      "virginica"
+    ]
+  },
+  "model_info": {
+    "type": "RandomForest",
+    "n_estimators": 100,
+    "accuracy": 0.8888888888888888
+  },
+  "pipeline_status": {
+    "data_loading": true,
+    "model_training": true,
+    "fairness_analysis": true,
+    "shap_analysis": false,
+    "drift_analysis": false
+  },
+  "generated_artifacts": [
+    {
+      "name": "fairness_metrics.json",
+      "size_bytes": 336
+    }
+  ]
+}

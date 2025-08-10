@@ -1,0 +1,14 @@
+{
+  "sepal_length": {
+    "drift_detected": false
+  },
+  "sepal_width": {
+    "drift_detected": false
+  },
+  "petal_length": {
+    "drift_detected": false
+  },
+  "petal_width": {
+    "drift_detected": false
+  }
+}
