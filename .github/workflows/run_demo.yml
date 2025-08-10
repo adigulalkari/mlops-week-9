@@ -2,35 +2,81 @@ name: ML Pipeline
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, master ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, master ]
   workflow_dispatch:
 
 jobs:
   run-pipeline:
     runs-on: ubuntu-latest
-
+    
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-
+      
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
         python-version: '3.11'
-
-    - name: Install dependencies
+        
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+          
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y python3-dev
+        
+    - name: Install Python dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-
+        
+    - name: Verify installation
+      run: |
+        python -c "import numpy, pandas, sklearn, shap, fairlearn, evidently; print('All packages imported successfully')"
+        
+    - name: Create necessary directories
+      run: |
+        mkdir -p data
+        mkdir -p artifacts
+        
     - name: Run ML pipeline
       run: |
         python train.py
-
+        
+    - name: Verify artifacts were created
+      run: |
+        echo "=== Artifacts directory contents ==="
+        ls -la artifacts/ || echo "Artifacts directory not found"
+        echo "=== File sizes ==="
+        du -h artifacts/* || echo "No artifacts found"
+        echo "=== Working directory contents ==="
+        ls -la
+        
     - name: Upload ML artifacts
       uses: actions/upload-artifact@v4
+      if: always()  # Upload even if previous steps failed
       with:
         name: ml-pipeline-artifacts
-        path: artifacts/
+        path: |
+          artifacts/
+          *.log
+        if-no-files-found: warn
+        retention-days: 30
+        
+    - name: Upload logs on failure
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: pipeline-logs
+        path: |
+          *.log
+          artifacts/
+        if-no-files-found: ignore
